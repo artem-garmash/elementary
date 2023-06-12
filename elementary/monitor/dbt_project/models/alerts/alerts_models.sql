@@ -2,16 +2,30 @@
   config(
     materialized = 'incremental',
     unique_key = 'alert_id',
-    merge_update_columns = ['alert_id'],
-    on_schema_change = 'append_new_columns'
+    on_schema_change = 'append_new_columns',
+    table_type='iceberg',
+    incremental_strategy=elementary.get_default_incremental_strategy()
   )
 }}
 
 
 {% set error_models_relation = adapter.get_relation(this.database, this.schema, 'alerts_dbt_models') %}
 {% if error_models_relation %}
-    select 
-      *,
+    select
+      alert_id,
+      unique_id,
+      {{ elementary.edr_cast_as_timestamp('detected_at') }} as detected_at,
+      database_name,
+      materialization,
+      path,
+      original_path,
+      schema_name,
+      message,
+      owners,
+      tags,
+      alias,
+      status,
+      full_refresh,
       false as alert_sent,  {# backwards compatibility #}
       'pending' as suppression_status,
       {{ elementary.edr_cast_as_string('NULL') }} as sent_at
