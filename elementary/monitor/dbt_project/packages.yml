@@ -8,4 +8,4 @@ packages:
   # - git: https://github.com/elementary-data/dbt-data-reliability.git
   #   revision: cac65feeaa3de7180179f902a2627544f1f51a66
   - git: https://github.com/artem-garmash/dbt-data-reliability.git
-    revision: athena-support-v3
+    revision: athena-support-v3-ci
